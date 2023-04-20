@@ -1,5 +1,7 @@
 # GA4 to Split - node.js
 
+WARNING!  This is an unfinished project!!!!
+
 This is an unfinished, but working integration of GA4 event traffic to Split events.
 
 ## To install 
@@ -48,6 +50,7 @@ If you get back good looking results, you are ready for the next step.
  - Create a SPLIT_API_KEY file and copy-and-paste your key, with no spaces or new lines, into your file
  - Create a new Service Account in Google and download a JSON key.
  - Give the Service Account permissions to your dataset (use the client_email from your JSON key).
+ - Edit the datasetId in the index.js to reflect your dataset
 
 ```
 node index.js
