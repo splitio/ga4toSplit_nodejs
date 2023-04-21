@@ -1,8 +1,8 @@
 # GA4 to Split - node.js
 
-WARNING!  This is an unfinished project!!!!
+Using gtag in your pages?  Want to publish your GA4 event traffic to Split for use in experimentation?  Look no further!
 
-This is an unfinished, but working integration of GA4 event traffic to Split events.
+GA can link to BigQuery tables natively.  Set up a transactional table for your gtag traffic, then let a Split lambda query the tables and load them into Split as events.  Once setup, you can forget it's there and just benefit from the flow of useful information into Split.
 
 ## To install 
 
@@ -10,51 +10,26 @@ Clone the repository and run 'npm install' to download dependencies.
 
  - Customer should use GA4 (gtag) in HTML/JS or similar
  - Verify that you can see the event traffic in Google
- - Link BigQuery to your GA project
+ - Link BigQuery to your GA project (follow Google's intstructions).
 
-Choose "transactionally" over daily for best results.
+Choose "transactionally" instead of daily. The integration querys intraday events.
 
- - Run a sample query in BigQuery console
-
-```
-  select 
-    ep.key as eventTypeId,
-    ep.value.string_value as title,
-    event_timestamp as ts,
-    user_id as trafficKey,
-    device.category as deviceCategory,
-    device.mobile_brand_name as mobileBrandName,
-    device.mobile_model_name as mobileModelName,
-    device.operating_system as os,
-    device.operating_system_version as osVersion,
-    geo.continent as geoContinent,
-    geo.country as geoCountry,
-    geo.region as geoRegion,
-    geo.city as geoCity,
-    geo.sub_continent as geoSubcontinent,
-    geo.metro as metro
-  from ${table},
-  unnest(event_params) as ep
-  where user_id is not NULL
-```
-
-Where table should look like this (note the intraday timestamp):  
-
-```
-  const table = '\`split-and-ga4.analytics_369415822.events_intraday_20230420\`';
-```
-
-If you get back good looking results, you are ready for the next step.
-
- - Manually edit the right table name into index.js
  - Create a SPLIT_API_KEY file and copy-and-paste your key, with no spaces or new lines, into your file
  - Create a new Service Account in Google and download a JSON key.
+ - Call the JSON "service_account.json".  It should be in the same top-level directory as the SPLIT_API_KEY
  - Give the Service Account permissions to your dataset (use the client_email from your JSON key).
- - Edit the datasetId in the index.js to reflect your dataset
 
+ - The lambda takes one parameter:
 ```
-node index.js
-```
+{
+  "datasetId": "split-and-ga4.analytics_369415822"
+}
+
+Or whatever is appropriate to your dataset.  The integration knows what tables to query using this configuration information.
+
+ - Run your lambda using the test input params. Verify that it is finding events and posting them to Split.
+
+The integration reads events in batches of two hundred, so will page through larger event results.  This also allows the integration to batch uploads of the events to Split.
 
 ## What next?
 
@@ -62,3 +37,6 @@ The script is unfinished.  It needs to discover the table by date automatically.
 
 Also, the events should be batched to Split.  Right now they're sent individually.
  
+## Questions?
+
+david.martin@split.io
