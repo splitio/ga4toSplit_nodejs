@@ -36,7 +36,7 @@ export const handler = async(event) => {
   let totalCount = 0;
   do {
     const minutes = 1;
-    const lastNminutes = getTimestampMicroseconds(720);
+    const lastNminutes = getTimestampMicroseconds(10);
 
     let sqlQuery = `
     select 
