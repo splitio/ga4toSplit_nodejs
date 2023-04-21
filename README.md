@@ -31,11 +31,11 @@ Or whatever is appropriate to your dataset.  The integration knows what tables t
 
 The integration reads events in batches of two hundred, so will page through larger event results.  This also allows the integration to batch uploads of the events to Split.
 
+ - Use EventBridge Rules to schedule the lambda.
+
+EventBridge supports an easy-to-pick-up CRON syntax for scheduling runs.  I run mine every five minutes: 0,5,10,15,20,25,... et cetera.
+
 ## What next?
-
-The script is unfinished.  It needs to discover the table by date automatically. 
-
-Also, the events should be batched to Split.  Right now they're sent individually.
  
 ## Questions?
 
