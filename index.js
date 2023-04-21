@@ -18,7 +18,7 @@ async function runQuery() {
   const datasetId = 'analytics_369415822';
 
   // Define your SQL query
-  const table = '\`split-and-ga4.analytics_369415822.events_intraday_20230420\`';
+  const table = '\`split-and-ga4.analytics_369415822.events_intraday_20230421\`';
 
   const sqlQuery = `
   select 
@@ -74,7 +74,7 @@ async function runQuery() {
       eventTypeId: row.eventTypeId,
       trafficTypeName: 'user', // should this be more flexible?
       key: row.trafficKey,
-      timestamp: row.ts,
+      timestamp: row.ts / 1000,
       properties: props,
       source: 'BigQuery'
     }];
