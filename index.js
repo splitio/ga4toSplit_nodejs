@@ -17,8 +17,16 @@ async function runQuery() {
   // Set your dataset ID
   const datasetId = 'analytics_369415822';
 
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+
+  const today = `${year}${month}${day}`;  
+  console.log(today);
+
   // Define your SQL query
-  const table = '\`split-and-ga4.analytics_369415822.events_intraday_20230421\`';
+  const table = '\`split-and-ga4.analytics_369415822.events_intraday_' + today + '\`';
 
   const sqlQuery = `
   select 
@@ -51,9 +59,9 @@ async function runQuery() {
   // Wait for the query to finish
   const [rows] = await job.getQueryResults();
 
-  // rows.forEach(row => console.log(row));
+  let data = [];
   rows.forEach(async row => {
-    console.log(row);
+    // console.log(row);
 
     const props = {
       'event_params.value.string_value': row.title ? row.title : '',
@@ -70,26 +78,30 @@ async function runQuery() {
       'geo.metro': row.metro
     }
 
-    let data = [{
+    data.push({
       eventTypeId: row.eventTypeId,
       trafficTypeName: 'user', // should this be more flexible?
       key: row.trafficKey,
       timestamp: row.ts / 1000,
       properties: props,
       source: 'BigQuery'
-    }];
-
-    const splitApiKey = fs.readFileSync('SPLIT_API_KEY', 'utf8').trim();
-    console.log(data);
-    await axios.post('https://events.split.io/api/events/bulk', data, 
-      { headers: {'Authorization': 'Bearer ' + splitApiKey }}) 
-    .then(function (response) {
-        console.log(response.status);
-    })
-    .catch(function (error) {
-        console.log(error);
-    })
+    });
   });
+
+  const splitApiKey = fs.readFileSync('SPLIT_API_KEY', 'utf8').trim();
+  // console.log(data);
+  await axios.post('https://events.split.io/api/events/bulk', data, 
+    { headers: {'Authorization': 'Bearer ' + splitApiKey }}) 
+  .then(function (response) {
+      // console.log(response.status);
+  })
+  .catch(function (error) {
+      console.log(error);
+  })
+  .finally(() => {
+    console.log('posted ' + data.length + ' events to Split');
+  });
+
 }
 
 runQuery().catch(console.error.response);
