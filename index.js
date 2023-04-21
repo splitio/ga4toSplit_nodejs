@@ -76,7 +76,7 @@ async function runQuery() {
       key: row.trafficKey,
       timestamp: row.ts,
       properties: props,
-      source: 'BiqQuery'
+      source: 'BigQuery'
     }];
 
     const splitApiKey = fs.readFileSync('SPLIT_API_KEY', 'utf8').trim();
