@@ -19,6 +19,18 @@ Choose "transactionally" instead of daily. The integration querys intraday event
  - Call the JSON "service_account.json".  It should be in the same top-level directory as the SPLIT_API_KEY
  - Give the Service Account permissions to your dataset (use the client_email from your JSON key).
 
+ - In AWS, create a new lambda.  Change the default configuration to a 5 minute timeout instead of 3 second default.
+ - Zip and upload the code and keys to AWS
+
+From the top-level directory you cloned,
+```
+zip -r split.zip *
+```
+
+The zip should include the node_modules subdirectory.
+
+Use the "Upload from" button of your AWS Lambda to upload the ZIP file.
+
  - The lambda takes one parameter:
 ```
 {
@@ -34,6 +46,8 @@ The integration reads events in batches of two hundred, so will page through lar
  - Use EventBridge Rules to schedule the lambda.
 
 EventBridge supports an easy-to-pick-up CRON syntax for scheduling runs.  I run mine every five minutes: 0,5,10,15,20,25,... et cetera.
+
+Don't forget to put the datasetId parameter into the execution!  Use JSON just like what is shown above.
 
 ## What next?
  
