@@ -1,10 +1,12 @@
-const { BigQuery } = require('@google-cloud/bigquery');
-const fs = require('fs');
-const axios = require('axios');
+import { BigQuery } from '@google-cloud/bigquery';
+import fs from 'fs';
+import axios from 'axios';
 
-async function runQuery() {
+export const handler = async(event) => {
+  // console.log('event', event);
+
   // Read the JSON key file
-  const jsonKeyFilePath = 'split-and-ga4-5a6eb1cc47f0.json';
+  const jsonKeyFilePath = 'service_account.json';
   const jsonKeyFile = fs.readFileSync(jsonKeyFilePath, 'utf8');
   const credentials = JSON.parse(jsonKeyFile);
 
@@ -14,8 +16,8 @@ async function runQuery() {
     credentials: credentials,
   });
 
-  // Set your dataset ID
-  const datasetId = 'analytics_369415822';
+  const datasetId = event.datasetId;
+  console.log('datasetId', datasetId);
 
   const date = new Date();
   const year = date.getFullYear();
@@ -23,14 +25,15 @@ async function runQuery() {
   const day = date.getDate().toString().padStart(2, '0');
 
   const today = `${year}${month}${day}`;  
-  console.log(today);
+  console.log('today', today);
 
   // Define your SQL query
-  const table = '\`split-and-ga4.analytics_369415822.events_intraday_' + today + '\`';
+  const table = `${datasetId}.events_intraday_` + today;
 
   let offset = 0;
   const limit = 200;
   let rowsFound = 0;
+  let totalCount = 0;
   do {
     const minutes = 1;
     const lastNminutes = getTimestampMicroseconds(720);
@@ -52,7 +55,7 @@ async function runQuery() {
       geo.city as geoCity,
       geo.sub_continent as geoSubcontinent,
       geo.metro as metro
-    from ${table},
+    from \`${table}\`,
     unnest(event_params) as ep
     where user_id is not NULL
     AND event_timestamp > ${lastNminutes}
@@ -115,9 +118,17 @@ async function runQuery() {
       })
       .finally(() => {
         console.log('posted ' + data.length + ' events to Split');
+        totalCount += data.length;
       });
     }
   } while (rowsFound >= limit);
+
+  const response = {
+      statusCode: 200,
+      body: JSON.stringify('finished export of ' + totalCount + ' events to Split'),
+  };
+
+  return response;
 }
 
 const getTimestampMicroseconds = (minutesAgo) => {
@@ -127,5 +138,3 @@ const getTimestampMicroseconds = (minutesAgo) => {
 
   return timestampMicroseconds;
 };
-
-runQuery().catch(console.error.response);
