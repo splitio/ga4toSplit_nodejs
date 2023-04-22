@@ -46,7 +46,7 @@ The integration reads events in batches of two hundred, so will page through lar
 
  - Use EventBridge Rules to schedule the lambda.
 
-EventBridge supports an easy-to-pick-up CRON syntax for scheduling runs.  I run mine every five minutes: 0,5,10,15,20,25,... et cetera.
+EventBridge supports an easy-to-pick-up CRON syntax for scheduling runs.  I run mine every five minutes: 0,5,10,...55 et cetera.
 
 Don't forget to put the datasetId parameter into the execution!  Use JSON just like what is shown above.
 
