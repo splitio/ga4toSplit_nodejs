@@ -27,7 +27,7 @@ From the top-level directory you cloned,
 zip -r split.zip *
 ```
 
-The zip should include the node_modules subdirectory.
+The zip should include the node_modules subdirectory, the Split key file, the service_account.json file and more.
 
 Use the "Upload from" button of your AWS Lambda to upload the ZIP file.
 
