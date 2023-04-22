@@ -23,7 +23,7 @@ Choose "transactionally" instead of daily. The integration querys intraday event
  - Zip and upload the code and keys to AWS
 
 From the top-level directory you cloned,
-```
+```bash
 zip -r split.zip *
 ```
 
@@ -32,10 +32,11 @@ The zip should include the node_modules subdirectory.
 Use the "Upload from" button of your AWS Lambda to upload the ZIP file.
 
  - The lambda takes one parameter:
-```
+```json
 {
   "datasetId": "split-and-ga4.analytics_369415822"
 }
+```
 
 Or whatever is appropriate to your dataset.  The integration knows what tables to query using this configuration information.
 
