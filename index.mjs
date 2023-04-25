@@ -40,7 +40,7 @@ export const handler = async(event) => {
 
     let sqlQuery = `
     select 
-      ep.key as eventTypeId,
+      event_name as eventTypeId,
       ep.value.string_value as title,
       event_timestamp as ts,
       user_id as trafficKey,
