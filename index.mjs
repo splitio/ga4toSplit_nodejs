@@ -41,6 +41,7 @@ export const handler = async(event) => {
     let sqlQuery = `
     select 
       event_name as eventTypeId,
+      ep.key as event_paramsKey,      
       ep.value.string_value as title,
       event_timestamp as ts,
       user_id as trafficKey,
@@ -82,6 +83,7 @@ export const handler = async(event) => {
         // console.log(row);
 
         const props = {
+          'event_params.key': row.event_paramsKey,
           'event_params.value.string_value': row.title ? row.title : '',
           'device.category': row.deviceCategory,
           'device.mobile_brand_name': row.mobileBrandName,
