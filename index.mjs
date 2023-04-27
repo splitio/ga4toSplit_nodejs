@@ -91,7 +91,7 @@ export const handler = async(event) => {
             props[key] = row[key];
           }
         });
-        console.log(props);
+        // console.log(props);
 
         let theValue;
         if(row.value_int_value) {
@@ -103,7 +103,7 @@ export const handler = async(event) => {
         } else {
           theValue = 0;
         }
-        console.log('theValue', theValue);
+        // console.log('theValue', theValue);
 
         data.push({
           eventTypeId: row.eventTypeId + '.' + row.event_paramsKey,
