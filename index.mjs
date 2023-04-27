@@ -45,20 +45,20 @@ export const handler = async(event) => {
       value.int_value as value_int_value,
       value.float_value as value_float_value,
       value.double_value as value_double_value,
-      ep.value.string_value as title,
+      ep.value.string_value,
       event_timestamp as ts,
       user_id as trafficKey,
-      device.category as deviceCategory,
-      device.mobile_brand_name as mobileBrandName,
-      device.mobile_model_name as mobileModelName,
-      device.operating_system as os,
-      device.operating_system_version as osVersion,
-      geo.continent as geoContinent,
-      geo.country as geoCountry,
-      geo.region as geoRegion,
-      geo.city as geoCity,
-      geo.sub_continent as geoSubcontinent,
-      geo.metro as metro
+      device.category,
+      device.mobile_brand_name,
+      device.mobile_model_name,
+      device.operating_system,
+      device.operating_system_version,
+      geo.continent,
+      geo.country,
+      geo.region,
+      geo.city,
+      geo.sub_continent,
+      geo.metro
     from \`${table}\`,
     unnest(event_params) as ep
     where user_id is not NULL
@@ -91,7 +91,7 @@ export const handler = async(event) => {
             props[key] = row[key];
           }
         });
-        // console.log(props);
+        console.log(props);
 
         let theValue;
         if(row.value_int_value) {
