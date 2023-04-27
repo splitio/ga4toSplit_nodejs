@@ -42,9 +42,7 @@ export const handler = async(event) => {
     select 
       event_name as eventTypeId,
       ep.key as event_paramsKey,   
-      value.int_value as value_int_value,
-      value.float_value as value_float_value,
-      value.double_value as value_double_value,
+      coalesce(value.int_value, value.float_value, value.double_value) as cValue,
       ep.value.string_value,
       event_timestamp as ts,
       user_id as trafficKey,
@@ -93,18 +91,6 @@ export const handler = async(event) => {
         });
         // console.log(props);
 
-        let theValue;
-        if(row.value_int_value) {
-          theValue = row.value_int_value;
-        } else if (row.value_float_value) {
-          theValue = row.value_float_value;
-        } else if (row.value_double_value) {
-          theValue = row.value_double_value;
-        } else {
-          theValue = 0;
-        }
-        // console.log('theValue', theValue);
-
         data.push({
           eventTypeId: row.eventTypeId + '.' + row.event_paramsKey,
           trafficTypeName: 'user', // should this be more flexible?
@@ -112,7 +98,7 @@ export const handler = async(event) => {
           timestamp: row.ts / 1000,
           properties: props,
           source: 'BigQuery',
-          value: theValue // ok if undefined 
+          value: row.cValue // ok if undefined 
         });
       });
 
