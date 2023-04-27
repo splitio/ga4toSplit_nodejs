@@ -14,7 +14,7 @@ Clone the repository and run 'npm install' to download dependencies.
 
 Choose "transactionally" instead of daily. The integration querys intraday events.
 
- - Create a SPLIT_API_KEY file and copy-and-paste your key, with no spaces or new lines, into your file
+ - Create a SPLIT_API_KEY file and copy-and-paste your a server-side API key, with no spaces or new lines, into your file
  - Create a new Service Account in Google and download a JSON key.
  - Call the JSON "service_account.json".  It should be in the same top-level directory as the SPLIT_API_KEY
  - Give the Service Account permissions to your dataset (use the client_email from your JSON key).
