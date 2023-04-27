@@ -85,21 +85,13 @@ export const handler = async(event) => {
       rows.forEach(async row => {
         // console.log(row);
 
-        const props = {
-          'event_params.key': row.event_paramsKey,
-          'event_params.value.string_value': row.title ? row.title : '',
-          'device.category': row.deviceCategory,
-          'device.mobile_brand_name': row.mobileBrandName,
-          'device.mobile_model_name': row.mobileModelName,
-          'device.operating_system': row.os,
-          'device.operating_system_version': row.osVersion,
-          'geo.continent': row.geoContinent,
-          'geo.country': row.geoCountry,
-          'geo.region': row.geoRegion,
-          'geo.city': row.geoCity,
-          'geo.sub_continent': row.geoSubcontinent,
-          'geo.metro': row.metro
-        }
+        let props = {};
+        Object.keys(row).forEach(key => {
+          if(row[key]) {
+            props[key] = row[key];
+          }
+        });
+        console.log(props);
 
         let theValue;
         if(row.value_int_value) {
@@ -108,6 +100,8 @@ export const handler = async(event) => {
           theValue = row.value_float_value;
         } else if (row.value_double_value) {
           theValue = row.value_double_value;
+        } else {
+          theValue = 0;
         }
         console.log('theValue', theValue);
 
