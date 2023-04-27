@@ -91,7 +91,7 @@ export const handler = async(event) => {
             props[key] = row[key];
           }
         });
-        console.log(props);
+        // console.log(props);
 
         let theValue;
         if(row.value_int_value) {
