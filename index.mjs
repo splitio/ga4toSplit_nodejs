@@ -43,6 +43,8 @@ export const handler = async(event) => {
       event_name as eventTypeId,
       ep.key as event_paramsKey,   
       value.int_value as value_int_value,
+      value.float_value as value_float_value,
+      value.double_value as value_double_value,
       ep.value.string_value as title,
       event_timestamp as ts,
       user_id as trafficKey,
@@ -99,14 +101,24 @@ export const handler = async(event) => {
           'geo.metro': row.metro
         }
 
+        let theValue;
+        if(row.value_int_value) {
+          theValue = row.value_int_value;
+        } else if (row.value_float_value) {
+          theValue = row.value_float_value;
+        } else if (row.value_double_value) {
+          theValue = row.value_double_value;
+        }
+        console.log('theValue', theValue);
+
         data.push({
-          eventTypeId: row.eventTypeId,
+          eventTypeId: row.eventTypeId + '.' + row.event_paramsKey,
           trafficTypeName: 'user', // should this be more flexible?
           key: row.trafficKey,
           timestamp: row.ts / 1000,
           properties: props,
           source: 'BigQuery',
-          value: row.value_int_value 
+          value: theValue // ok if undefined 
         });
       });
 
